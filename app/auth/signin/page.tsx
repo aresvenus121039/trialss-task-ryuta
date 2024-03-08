@@ -1,8 +1,38 @@
 'use client'
 import { Input } from "@/components/ui/input";
+import { FormEvent } from "react";
 import Image from "next/image";
+import axios from "axios";
+import { supabase } from "@/utils/supabase";
 
 export default function SignIn() {
+  
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get('email');
+    const password = formData.get('password');
+
+    let { data: users, error } = await supabase
+  .from('users')
+  .select('*')
+
+  console.log("123",users);
+  
+    
+    const res = await axios.get("/api/users");
+    console.log(res.data);
+    
+
+    const response = await axios.post("/api/auth/signin",{
+      email: email,
+      password: password
+    });
+    console.log(response.data.token);
+    
+  }
+
   return (
     <section className="h-screen px-7">
       <div className="h-full">
@@ -18,17 +48,19 @@ export default function SignIn() {
           </div>
 
           <div className="mb-12 md:mb-0 md:w-8/12 lg:w-5/12 xl:w-5/12">
-            <form>
+            <form onSubmit={handleSubmit}>
               <div className="relative mb-6" data-twe-input-wrapper-init>
                 <Input
                   type="email"
-                  placeholder="Email address" />
+                  name="email"
+                  placeholder="Email address" required/>
               </div>
 
               <div className="relative mb-6" data-twe-input-wrapper-init>
                 <Input
                   type="password"
-                  placeholder="Password" />
+                  name="password"
+                  placeholder="Password" required/>
               </div>
 
               <div className="mb-6 flex items-center justify-between">
@@ -50,7 +82,7 @@ export default function SignIn() {
 
               <div className="text-center lg:text-left">
                 <button
-                  type="button"
+                  type="submit"
                   className="inline-block w-full rounded bg-primary px-7 pb-2 pt-3 text-sm font-medium uppercase leading-normal text-white shadow-primary-3 transition duration-150 ease-in-out hover:bg-primary-accent-300 hover:shadow-primary-2 focus:bg-primary-accent-300 focus:shadow-primary-2 focus:outline-none focus:ring-0 active:bg-primary-600 active:shadow-primary-2 dark:shadow-black/30 dark:hover:shadow-dark-strong dark:focus:shadow-dark-strong dark:active:shadow-dark-strong"
                   data-twe-ripple-init
                   data-twe-ripple-color="light">

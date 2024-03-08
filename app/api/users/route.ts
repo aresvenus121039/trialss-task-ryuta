@@ -9,7 +9,7 @@ export const GET = async (req: NextRequest, res: NextResponse) => {
           status: 200
       })
   } catch (error) {
-      return NextResponse.json({ message: "failed to fetched data" }, {
+      return NextResponse.json({ message: error }, {
           status: 500
       })
   }
